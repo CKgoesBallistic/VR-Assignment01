@@ -1,1 +1,1 @@
-
+Stiched image
