@@ -11,13 +11,11 @@ if image1 is None or image2 is None:
 # Resize to reduce memory usage
 image1 = cv2.resize(image1, (image1.shape[1]//2, image1.shape[0]//2))
 image2 = cv2.resize(image2, (image2.shape[1]//2, image2.shape[0]//2))
-
 print("Loaded and resized images")
 
 # Convert images to grayscale
 gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
 gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
-
 print("Converted images to grayscale")
 
 # Initialize ORB detector
@@ -32,6 +30,14 @@ if descriptors1 is None or descriptors2 is None:
 
 print(f"Detected key points: {len(keypoints1)} in image1, {len(keypoints2)} in image2")
 
+# Draw keypoints on images
+image1_keypoints = cv2.drawKeypoints(image1, keypoints1, None, color=(0, 255, 0))
+image2_keypoints = cv2.drawKeypoints(image2, keypoints2, None, color=(0, 255, 0))
+
+cv2.imwrite('image1_keypoints.jpg', image1_keypoints)
+cv2.imwrite('image2_keypoints.jpg', image2_keypoints)
+print("Saved keypoints images")
+
 # Use BFMatcher to find matches
 bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 matches = bf.match(descriptors1, descriptors2)
@@ -44,10 +50,14 @@ print(f"Found {len(matches)} matches")
 # Sort matches by distance (best matches first)
 matches = sorted(matches, key=lambda x: x.distance)[:100]
 
+# Draw matched keypoints
+match_img = cv2.drawMatches(image1, keypoints1, image2, keypoints2, matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+cv2.imwrite('matched_keypoints.jpg', match_img)
+print("Saved matched keypoints image")
+
 # Extract matched points
 points1 = np.array([keypoints1[m.queryIdx].pt for m in matches], dtype=np.float32)
 points2 = np.array([keypoints2[m.trainIdx].pt for m in matches], dtype=np.float32)
-
 print("Extracted matched points")
 
 # Find homography
@@ -65,7 +75,6 @@ height2, width2 = image2.shape[:2]
 # Warp image2 onto image1
 panorama = cv2.warpPerspective(image2, H, (width1 + width2, max(height1, height2)))
 panorama[0:height1, 0:width1] = image1  # Overlay image1 on the panorama
-
 print("Stitched images")
 
 # Convert to grayscale for cropping black areas
