@@ -102,4 +102,7 @@ The final panorama is cropped to remove unnecessary black areas.
 ![Stitching](part2/input/Part2_input_image2.jpg)
 
 ### Sample output
+![Stitching](part2/output/matched_keypoints.jpg)
+![Stitching](part2/output/image1_keypoints.jpg)
+![Stitching](part2/output/image2_keypoints.jpg)
 ![Stitching](part2/output/Part2_output_image.jpg)
