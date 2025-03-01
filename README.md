@@ -74,14 +74,44 @@ Edit
 This script stitches two images into a single panorama using feature matching and homography estimation techniques.
 
 ### Methodology
-- Load and resize input images to reduce memory usage.
-- Convert images to grayscale.
-- Detect keypoints and compute descriptors using ORB (Oriented FAST and Rotated BRIEF).
-- Match features between images using Brute-Force Matcher with Hamming distance.
-- Find the homography matrix using RANSAC.
-- Warp the second image onto the first image.
-- Crop the stitched panorama to remove black borders.
-- Save the final stitched panorama.
+
+- **Image Loading and Resizing**:
+    - Both input images are loaded from disk.
+    - Images are resized to half their original dimensions to reduce memory usage and processing time.
+
+- **Grayscale Conversion**:
+    - Both images are converted to grayscale to simplify feature detection.
+
+- **Feature Detection and Description**:
+    - Used ORB (Oriented FAST and Rotated BRIEF) to detect keypoints and compute feature descriptors for both images.
+
+- **Keypoint Visualization**:
+    - Keypoints are drawn onto both images for visual inspection.
+    - Images with keypoints are saved for debugging and visualization.
+
+- **Feature Matching**:
+    - Used **Brute Force Matcher (BFMatcher)** with Hamming distance (suitable for ORB descriptors) and cross-checking enabled.
+    - Matches are sorted by distance, and the top 100 matches are selected.
+
+- **Match Visualization**:
+    - A match visualization image is created, showing how keypoints in both images correspond to each other.
+    - This match image is saved.
+
+- **Homography Estimation**:
+    - Extracted matched keypoints are used to compute a **homography matrix** using RANSAC.
+    - The homography describes how to warp the second image to align with the first.
+
+- **Image Warping and Stitching**:
+    - The second image is warped onto the coordinate system of the first image.
+    - The first image is overlaid onto the panorama to ensure no gaps in the left side.
+
+- **Cropping Excess Black Areas**:
+    - After warping, black areas may appear in the panorama.
+    - Contours are used to find the non-black region, which is then cropped to produce a clean final result.
+
+- **Final Output**:
+    - The cropped stitched panorama is saved to disk.
+
 
 ### How to Run
 Ensure you are inside the part2 folder and run:
