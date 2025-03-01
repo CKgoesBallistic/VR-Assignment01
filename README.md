@@ -8,13 +8,31 @@
 This script detects and counts coins in an input image using **contour detection** and **circle fitting techniques**. Each detected coin is highlighted and labeled.
 
 ### Methodology
-- Load input image.
-- Convert to grayscale and apply Gaussian blur.
-- Apply Canny Edge Detection.
-- Detect external contours and filter out small areas.
-- Fit **minimum enclosing circles** around each detected coin.
-- Draw the circles on the image and label each coin with a number.
-- Display the original and processed images side-by-side.
+
+- **Image Preprocessing**: 
+    - The input image is loaded using OpenCV.
+    - Converted to grayscale for simpler processing.
+    - Applied Gaussian blur to reduce noise and smoothen the image.
+
+- **Edge Detection and Contour Extraction**:
+    - Applied Canny edge detection to highlight the edges of the coins.
+    - Performed dilation to connect fragmented edges and enhance the contours.
+    - Extracted external contours from the processed image.
+
+- **Filtering and Segmentation**:
+    - Filtered contours based on area to remove small unwanted objects.
+    - For each detected coin, the **minimum enclosing circle** is fitted to approximate its boundary.
+    - Each segmented coin is labeled with a unique number directly on the image.
+
+- **Circular Coin Extraction**:
+    - Created a circular mask for each detected coin.
+    - Applied the mask to extract only the coin region from the original image.
+    - Cropped the circular coin into a square region and saved it as a transparent PNG.
+
+- **Visualization and Output**:
+    - Displayed the original and segmented images side by side.
+    - Saved each segmented circular coin in an output folder for further analysis.
+
 
 ### How to Run
 Ensure you are inside the `part1` folder and run:
